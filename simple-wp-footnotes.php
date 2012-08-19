@@ -53,6 +53,10 @@ class Simple_WP_Footnotes {
 	const TINYMCE_PLUGIN_NAME = 'simple_wp_footnotes';
 
 	private static $footnote_fields;
+	
+	private static $footnotes = array();
+	
+	private static $placement = 'content';
 
 	/**
 	 * Initialize the class
@@ -62,8 +66,7 @@ class Simple_WP_Footnotes {
 	public static function init() {
 	
 		self::$footnote_fields = array(
-			'footnote_number'     => __( 'Footnote Number' ),
-			'footnote_text'  => __( 'Footnote Text' )
+			'footnote_text'  => __( 'Footnote' )
 		);
 		
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_styles_and_scripts'), 100 );
@@ -75,8 +78,15 @@ class Simple_WP_Footnotes {
 		add_filter( 'mce_external_plugins', array( __CLASS__, 'register_tinymce_plugin' ) );
 
 		add_filter( 'mce_buttons', array( __CLASS__, 'register_tinymce_button' ) );
-
-		//add_shortcode( 'ref', array( __CLASS__, 'shortcode_footnote') );
+		
+        //if placement is after page_links add after page links 
+        if ( 'page_links' == self::$placement )
+        	add_filter( 'wp_link_pages_args', array( __CLASS__, 'simple_wp_footnotes_link_pages_args' ) );	
+        	
+        //filter normal content - if placement is set content or it isn't multipage post it will add to the end      
+        add_filter( 'the_content', array( __CLASS__, 'simple_wp_footnotes_filter_the_content' ), 12 );	
+		
+		add_shortcode( 'footnote', array( __CLASS__, 'simple_wp_footnote_shortcode') );
 
 	}
 
@@ -119,7 +129,7 @@ class Simple_WP_Footnotes {
 	
 			wp_enqueue_script( 'simple-wp-footnotes-admin', self::get_url( '/js/simple-wp-footnotes-admin.js', __FILE__ ) );
 	
-			wp_localize_script( 'simple-wp-footnotes-admin', 'footnoteFields', self::$footnote_fields );
+			wp_localize_script( 'simple-wp-footnotes-admin', 'FootnoteFields', self::$footnote_fields );
 		
 		}
 		
@@ -160,8 +170,6 @@ class Simple_WP_Footnotes {
 		return $plugins;
 	}
 
-
-
 	/**
 	 * Build jQuery UI Window.
 	 *
@@ -182,23 +190,103 @@ class Simple_WP_Footnotes {
 		<div id="footnote-details" style="margin: 1em;">
 
 		<?php foreach ( self::$footnote_fields as $field_id => $field_label ) : ?>
-		<?php if ( $field_id != 'footnote_text' ) { ?>
-		<label for="simple-<?php echo $field_id; ?>" style="display: inline-block; width: 90%; margin: 2px;">
+		<label for="simple-<?php echo $field_id; ?>" style="display: block; width: 90%; margin: 2px; float:none;">
 			<?php echo $field_label; ?>
-			<input type="text" id="simple-<?php echo $field_id; ?>" name="simple-<?php echo $field_id; ?>" value=""  style="width: 75%; float: right;"/>
-		</label>
-		<?php } else { ?>
-		<label for="simple-<?php echo $field_id; ?>" style="display: inline-block; width: 90%; margin: 2px;">
-			<?php echo $field_label; ?>
-			<textarea id="simple-<?php echo $field_id; ?>" name="simple-<?php echo $field_id; ?>" style="width: 75%; float: right;"></textarea>
+			<textarea id="simple-<?php echo $field_id; ?>" name="simple-<?php echo $field_id; ?>" style="display: block; width: 98%; float:none;" ></textarea>
 		</label>		
-		<?php } ?>
 		<?php endforeach; ?>
 
 		</div><!-- #footnote-details -->
 	</div><!-- #simple-wp-footnotes -->
 </div><!-- .hidden -->
 <?php
+	}
+	
+
+	/**
+	 * Create Shortcode
+	 *
+	 * @since 1.0
+	 */
+	public static function simple_wp_footnote_shortcode( $atts, $content = null ) {
+	
+			$id = get_the_ID();
+			
+			// if no shortcode content do nothing
+			if ( null === $content )
+					return;
+			
+			// prepare array for footnotes if it hasn't been done already		
+			if ( ! isset( self::$footnotes[ $id ] ) )
+					self::$footnotes[ $id ] = array( 0 => false );
+			
+			// add footnote to array		
+			self::$footnotes[ $id ][] = $content;
+			
+			// get footnote number/reference
+			$note = count( self::$footnotes[ $id ] ) - 1;
+			
+			$output = ' <a class="simple-wp-footnote" title="' . esc_attr( wp_strip_all_tags( $content ) ) . '" id="footnote-' . $id . '-' . $note . '" href="#footnote-' . $id . '-' . $note . '">';
+			$output .= '<sup>' . $note . '</sup>';
+			$output .= '</a>';
+						
+			return $output;
+   
+	}
+
+	/**
+	 * Append footnotes below page links (if a page is split for example)
+	 *
+	 * @since 1.0
+	 */		
+	public static function simple_wp_footnotes_link_pages_args( $args ) {
+		
+			// if wp_link_pages appears both before and after the content, $footnotes[$id] will be empty the first time through
+			$args['after'] = self::simple_wp_footnotes_append( $args['after'] );
+			
+			return $args;
+			
+	}
+	
+	/**
+	 * Filter the content
+	 *
+	 * @since 1.0
+	 */	
+	function simple_wp_footnotes_filter_the_content( $content ) {
+			
+			//if option is set to 'content' or it isn't multipage add the footnotes to the end of the content
+			if ( 'content' == self::$placement || ! $GLOBALS['multipage'] )
+					return self::simple_wp_footnotes_append( $content );
+			
+			//return the content
+			return $content;
+			
+	}
+
+
+	/**
+	 * Append footnotes
+	 *
+	 * @since 1.0
+	 */	
+	public static function simple_wp_footnotes_append( $content ) {
+	
+			$id = get_the_ID();
+						
+			// if no footnotes return content
+			if ( empty( self::$footnotes[$id] ) )
+					return $content;
+					
+			$content .= '<div class="simple-footnotes"><p class="notes">Notes:</p><ol>';
+			
+			foreach ( array_filter( self::$footnotes[$id] ) as $num => $note )
+					$content .= '<li id="footnote-' . $id . '-' . $num . '">' . do_shortcode( $note ) . ' <a href="#footnote-' . $id . '-' . $num . '">&#8617;</a></li>';
+					
+			$content .= '</ol></div>';
+			
+			return $content;
+			
 	}
 
 	/**

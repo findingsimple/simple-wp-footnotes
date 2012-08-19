@@ -10,8 +10,8 @@
 
 			// Register the command so that it can be invoked from the button
 			ed.addCommand('mce_simple_wp_footnotes', function() {
-				simple_qtips_canvas = ed;
-				simple_qtips_caller = 'visual';
+				simple_wp_footnotes_canvas = ed;
+				simple_wp_footnotes_caller = 'visual';
 				jQuery( "#simple-wp-footnotes" ).dialog( "open" );
 			});
 

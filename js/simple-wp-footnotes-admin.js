@@ -15,21 +15,19 @@ jQuery(document).ready(function($){
 				
 					$(this).dialog('close');
 
-					var FootnoteToInsert = '[ref';
+					var FootnoteToInsert = '[footnote]';
 
-					$.each(FootnoteFields,function(id,label){
+					$.each( FootnoteFields , function(id,label){
 					
-						if ( $('#footnote-'+id).val().length != 0 ){
+						if ( $('#simple-'+id).val().length != 0 ){
 						
-							FootnoteToInsert += ' '+id+'="'+$('#footnote-'+id).val()+'"';
-							
-							$('#footnote-'+id).val('');
-							
+							FootnoteToInsert += $('#simple-'+id).val();
+														
 						}
 						
 					});
 
-					FootnoteToInsert += ']';
+					FootnoteToInsert += '[/footnote]';
 
 					// HTML editor
 					if (simple_wp_footnotes_caller == 'html') {
