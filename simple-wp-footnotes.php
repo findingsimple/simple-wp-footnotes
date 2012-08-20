@@ -26,6 +26,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+require_once dirname( __FILE__ ) . '/simple-wp-footnotes-admin.php';
+
 if ( ! class_exists( 'Simple_WP_Footnotes' ) ) : 
 
 /**
@@ -68,7 +70,7 @@ class Simple_WP_Footnotes {
 		self::$footnote_fields = array(
 			'footnote_text'  => __( 'Footnote' )
 		);
-		
+						
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_styles_and_scripts'), 100 );
 
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_styles_and_scripts' ) );
@@ -79,6 +81,8 @@ class Simple_WP_Footnotes {
 
 		add_filter( 'mce_buttons', array( __CLASS__, 'register_tinymce_button' ) );
 		
+		self::$placement = ( get_option('simple_wp_footnotes-placement') ) ? get_option('simple_wp_footnotes-placement') : 'content';
+
         //if placement is after page_links add after page links 
         if ( 'page_links' == self::$placement )
         	add_filter( 'wp_link_pages_args', array( __CLASS__, 'simple_wp_footnotes_link_pages_args' ) );	
