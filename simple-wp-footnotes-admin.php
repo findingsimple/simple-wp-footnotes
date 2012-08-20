@@ -58,6 +58,14 @@ class Simple_WP_Footnotes_Admin {
 			'simple_wp_footnotes-general'
 		);
 		
+		add_settings_field(
+			'simple_wp_footnotes-toggle-show',
+			'Show footnotes on load',
+			__CLASS__ . '::simple_wp_footnotes_toggle_show_callback',
+			$page,
+			'simple_wp_footnotes-general'
+		);
+		
 		// Includes settings
 		
 		add_settings_section( 
@@ -86,6 +94,7 @@ class Simple_WP_Footnotes_Admin {
 		//register our settings
 		
 		register_setting( $page, 'simple_wp_footnotes-placement' );
+		register_setting( $page, 'simple_wp_footnotes-toggle-show' );
 
 		register_setting( $page, 'simple_wp_footnotes-toggle-css-include' );
 		register_setting( $page, 'simple_wp_footnotes-toggle-js-include' );
@@ -143,6 +152,12 @@ class Simple_WP_Footnotes_Admin {
 		endforeach;
 		
 		echo '</select>';
+		
+	}
+	
+	public static function simple_wp_footnotes_toggle_show_callback() {
+	
+		echo '<input name="simple_wp_footnotes-toggle-show" id="simple_wp_footnotes-toggle-show" type="checkbox" value="1" class="code" ' . checked( 1, get_option('simple_wp_footnotes-toggle-show'), false ) . ' /> Show footnotes by on page load (by default they are hidden)';
 		
 	}
 	
