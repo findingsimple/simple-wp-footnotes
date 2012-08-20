@@ -223,10 +223,10 @@ class Simple_WP_Footnotes {
 			// add footnote to array		
 			self::$footnotes[ $id ][] = $content;
 			
-			// get footnote number/reference
+			// get footnote number/reference (the last item in the array)
 			$note = count( self::$footnotes[ $id ] ) - 1;
 			
-			$output = ' <a class="simple-wp-footnote" title="' . esc_attr( wp_strip_all_tags( $content ) ) . '" id="footnote-' . $id . '-' . $note . '" href="#footnote-' . $id . '-' . $note . '">';
+			$output = ' <a class="simple-wp-footnote" title="' . esc_attr( wp_strip_all_tags( $content ) ) . '" id="footnote-' . $id . '-' . $note . '-return" href="#footnote-' . $id . '-' . $note . '" data-id="' . $id . '">';
 			$output .= '<sup>' . $note . '</sup>';
 			$output .= '</a>';
 						
@@ -278,12 +278,25 @@ class Simple_WP_Footnotes {
 			if ( empty( self::$footnotes[$id] ) )
 					return $content;
 					
-			$content .= '<div class="simple-footnotes"><p class="notes">Notes:</p><ol>';
+			// get number of footnotes
+			$count = count( self::$footnotes[ $id ] ) - 1;
+					
+			$content .= '<div class="simple-footnotes" id="footnotes-' . $id . '">';
+			
+			$content .= '<p class="notes">Footnotes: ';
+			$content .= '<a href="#" class="footnote-toggle" data-id="' . $id . '" >';
+			$content .= '<span class="footnote-show">Hide</span> ' . $count . ' footnotes';
+			$content .= '</a>';
+			$content .= '</p>';
+			
+			$content .= '<ol>';
 			
 			foreach ( array_filter( self::$footnotes[$id] ) as $num => $note )
-					$content .= '<li id="footnote-' . $id . '-' . $num . '">' . do_shortcode( $note ) . ' <a href="#footnote-' . $id . '-' . $num . '">&#8617;</a></li>';
+					$content .= '<li id="footnote-' . $id . '-' . $num . '">' . do_shortcode( $note ) . ' <a href="#footnote-' . $id . '-' . $num . '-return">&#8617;</a></li>';
 					
-			$content .= '</ol></div>';
+			$content .= '</ol>';
+			
+			$conyrny .= '</div>';
 			
 			return $content;
 			
