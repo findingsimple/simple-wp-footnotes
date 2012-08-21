@@ -300,7 +300,7 @@ class Simple_WP_Footnotes {
 					
 			$content .= '</ol>';
 			
-			$conyrny .= '</div>';
+			$content .= '</div>';
 			
 			return $content;
 			
