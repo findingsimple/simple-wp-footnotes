@@ -2,16 +2,31 @@ jQuery(document).ready(function($){
 
 	try {
 		var target = window.location.hash;
-		if (target.substr(0,4) == '#fn-') {
+		if (target.substr(0,10) == '#footnote-') {
 			var pieces = target.split('-');
 			if (pieces.length == 3) {
 				var pid = pieces[1];
 				footnote_show(pid);
 			}
+		} else {
+			jQuery(".simple-footnotes ol").hide();
+			jQuery('.footnote-show').html('Show');
 		}
 	} catch (ex) {
 		/* Nothing... */
 	}
+	
+	jQuery(".footnote-toggle").on("click", function(event){
+		var pid = jQuery(this).data("id");
+		jQuery('#footnotes-'+pid+' ol').toggle();
+		footnote_updatelabel(pid);
+		return false;	
+	});
+	
+	jQuery(".simple-wp-footnote").on("click", function(event){
+		var pid = jQuery(this).data("id");
+		footnote_show(pid);
+	});
 	
 });
 
@@ -22,16 +37,12 @@ function footnote_show(pid) {
 	footnote_updatelabel(pid);
 }
 
-function footnote_togglevisible(pid) {
-	jQuery('#footnotes-'+pid+' ol').toggle();
-	footnote_updatelabel(pid);
-	return false;
-}
-
 function footnote_updatelabel(pid) {
 	if (jQuery('#footnotes-'+pid+' ol').is(':visible')) {
-		jQuery('#footnotes-'+pid+' .footnoteshow').hide();
+		jQuery('#footnotes-'+pid+' .footnote-show').html('Hide');
+		jQuery('#footnotes-'+pid+' .footnote-toggle').removeClass('footnotes-hidden');
 	} else {
-		jQuery('#footnotes-'+pid+' .footnoteshow').show();
+		jQuery('#footnotes-'+pid+' .footnote-show').html('Show');
+		jQuery('#footnotes-'+pid+' .footnote-toggle').addClass('footnotes-hidden');
 	}
 }
