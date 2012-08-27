@@ -22,7 +22,7 @@ jQuery(document).ready(function($){
 						if ( $('#simple-'+id).val().length != 0 ){
 						
 							FootnoteToInsert += $('#simple-'+id).val();
-														
+							$('#simple-'+id).val('');							
 						}
 						
 					});
