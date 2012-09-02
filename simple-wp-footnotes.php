@@ -296,7 +296,7 @@ class Simple_WP_Footnotes {
 			$content .= '<ol>';
 			
 			foreach ( array_filter( self::$footnotes[$id] ) as $num => $note )
-					$content .= '<li id="footnote-' . $id . '-' . $num . '">' . do_shortcode( $note ) . ' <a href="#footnote-' . $id . '-' . $num . '-return">&#8617;</a></li>';
+					$content .= '<li id="footnote-' . $id . '-' . $num . '">' . do_shortcode( $note ) . ' <a href="#footnote-' . $id . '-' . $num . '-return" class="footnote-return">&#8617;</a></li>';
 					
 			$content .= '</ol>';
 			
