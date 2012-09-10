@@ -16,14 +16,14 @@ jQuery(document).ready(function($){
 		/* Nothing... */
 	}
 	
-	jQuery(".footnote-toggle").on("click", function(event){
+	jQuery(".footnote-toggle").bind("click", function(event){
 		var pid = jQuery(this).data("id");
 		jQuery('#footnotes-'+pid+' ol').toggle();
 		footnote_updatelabel(pid);
 		return false;	
 	});
 	
-	jQuery(".simple-wp-footnote").on("click", function(event){
+	jQuery(".simple-wp-footnote").bind("click", function(event){
 		var pid = jQuery(this).data("id");
 		footnote_show(pid);
 	});
