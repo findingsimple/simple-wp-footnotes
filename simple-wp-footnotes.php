@@ -104,10 +104,10 @@ class Simple_WP_Footnotes {
 		if ( !is_admin() ) {
 		
 			if ( get_option('simple_wp_footnotes-toggle-js-include') != 1 )
-				wp_enqueue_script( 'simple-wp-footnotes', self::get_url( '/js/simple-wp-footnotes.min.js', __FILE__ ) ,'jquery','1.0',true );
+				wp_enqueue_script( 'simple-wp-footnotes', self::get_url( '/js/simple-wp-footnotes.js', __FILE__ ) ,'jquery','1.0',true );
 			
 			if ( get_option('simple_wp_footnotes-toggle-css-include') != 1 )
-				wp_enqueue_style( 'simple-wp-footnotes', self::get_url( '/css/simple-wp-footnotes.min.css', __FILE__ ) );
+				wp_enqueue_style( 'simple-wp-footnotes', self::get_url( '/css/simple-wp-footnotes.css', __FILE__ ) );
 		
 		}
 		
