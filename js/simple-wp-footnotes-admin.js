@@ -45,14 +45,15 @@ jQuery(document).ready(function($){
 		});
 	});
 	
-	QTags.addButton('simple_wp_footnotes_id','footnote',function(){
+	if ( typeof QTags != 'undefined' ) {
+		QTags.addButton('simple_wp_footnotes_id','footnote',function(){
 	
-		simple_wp_footnotes_caller = 'html';
+			simple_wp_footnotes_caller = 'html';
 		
-		jQuery('#simple-wp-footnotes').dialog('open');
+			jQuery('#simple-wp-footnotes').dialog('open');
 		
-	});	
-	
+		});	
+	}
 });
 
 // Global variables to keep track on the canvas instance and from what editor
