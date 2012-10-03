@@ -85,7 +85,7 @@ class Simple_WP_Footnotes_Admin {
 		
 		add_settings_field(
 			'simple_wp_footnotes-toggle-js-include',
-			'Toggle JS enqueue in Head',
+			'Toggle JS enqueue in Footer',
 			__CLASS__ . '::simple_wp_footnotes_toggle_js_include_callback',
 			$page,
 			'simple_wp_footnotes-includes'
