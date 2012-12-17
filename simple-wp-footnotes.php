@@ -245,7 +245,7 @@ class Simple_WP_Footnotes {
 	 */	
 	 public static function simple_wp_footnotes_format_note($note) {
 		
-		if(get_option('simple_wp_footnotes-format') == 'asterix') {
+		if(get_option('simple_wp_footnotes-format') == 'asterisk') {
 			$out = '';
 			for($i = 0; $i < $note; $i++)
 				$out .= '*';
@@ -316,7 +316,7 @@ class Simple_WP_Footnotes {
 			
 			foreach ( array_filter( self::$footnotes[$id] ) as $num => $note ) {
 					$content .= '<li id="footnote-' . $id . '-' . $num . '">';
-					if(get_option('simple_wp_footnotes-format') == 'asterix')
+					if(get_option('simple_wp_footnotes-format') == 'asterisk')
 						$content .= self::simple_wp_footnotes_format_note($num) . ' ';
 					$content .= do_shortcode( $note ) . ' <a href="#footnote-' . $id . '-' . $num . '-return" class="footnote-return">&#8617;</a></li>';
 			}

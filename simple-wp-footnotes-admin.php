@@ -223,7 +223,7 @@ class Simple_WP_Footnotes_Admin {
 	 */	
 	public static $formats = array( 
 		'decimal',
-		'asterix'
+		'asterisk'
   	);
 
 }
