@@ -231,13 +231,31 @@ class Simple_WP_Footnotes {
 			$note = count( self::$footnotes[ $id ] ) - 1;
 			
 			$output = ' <a class="simple-wp-footnote" title="' . esc_attr( wp_strip_all_tags( $content ) ) . '" id="footnote-' . $id . '-' . $note . '-return" href="#footnote-' . $id . '-' . $note . '" data-id="' . $id . '">';
-			$output .= '<sup>' . $note . '</sup>';
+			$output .= '<sup>' . self::simple_wp_footnotes_format_note($note) . '</sup>';
 			$output .= '</a>';
 						
 			return $output;
    
 	}
-
+	
+	/**
+	 * Get the correct output for superscript links based on format
+	 *
+	 * @since 1.0
+	 */	
+	 public static function simple_wp_footnotes_format_note($note) {
+		
+		if(get_option('simple_wp_footnotes-format') == 'asterix') {
+			$out = '';
+			for($i = 0; $i < $note; $i++)
+				$out .= '*';
+			$note = $out;
+		}
+		
+		return $note;
+		
+	 }
+	
 	/**
 	 * Append footnotes below page links (if a page is split for example)
 	 *
@@ -277,6 +295,7 @@ class Simple_WP_Footnotes {
 	public static function simple_wp_footnotes_append( $content ) {
 	
 			$id = get_the_ID();
+			$hidden = get_option('simple_wp_footnotes-toggle-show') ? '' : ' footnotes-hidden';
 						
 			// if no footnotes return content
 			if ( empty( self::$footnotes[$id] ) )
@@ -288,15 +307,19 @@ class Simple_WP_Footnotes {
 			$content .= '<div class="simple-footnotes" id="footnotes-' . $id . '">';
 			
 			$content .= '<p class="notes">Footnotes: ';
-			$content .= '<a href="#" class="footnote-toggle" data-id="' . $id . '" >';
+			$content .= '<a href="#" class="footnote-toggle' . $hidden . '" data-id="' . $id . '" >';
 			$content .= '<span class="footnote-show">Hide</span> ' . $count . ' footnotes';
 			$content .= '</a>';
 			$content .= '</p>';
 			
-			$content .= '<ol>';
+			$content .= '<ol class="footnotes-format-' . get_option('simple_wp_footnotes-format') . '">';
 			
-			foreach ( array_filter( self::$footnotes[$id] ) as $num => $note )
-					$content .= '<li id="footnote-' . $id . '-' . $num . '">' . do_shortcode( $note ) . ' <a href="#footnote-' . $id . '-' . $num . '-return" class="footnote-return">&#8617;</a></li>';
+			foreach ( array_filter( self::$footnotes[$id] ) as $num => $note ) {
+					$content .= '<li id="footnote-' . $id . '-' . $num . '">';
+					if(get_option('simple_wp_footnotes-format') == 'asterix')
+						$content .= self::simple_wp_footnotes_format_note($num) . ' ';
+					$content .= do_shortcode( $note ) . ' <a href="#footnote-' . $id . '-' . $num . '-return" class="footnote-return">&#8617;</a></li>';
+			}
 					
 			$content .= '</ol>';
 			

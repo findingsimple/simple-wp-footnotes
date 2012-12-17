@@ -9,8 +9,10 @@ jQuery(document).ready(function($){
 				footnote_show(pid);
 			}
 		} else {
-			jQuery(".simple-footnotes ol").hide();
-			jQuery('.footnote-show').html('Show');
+			if(jQuery('.footnote-toggle').hasClass('footnotes-hidden')) {
+				jQuery(".simple-footnotes ol").hide();
+				jQuery('.footnote-show').html('Show');
+			}
 		}
 	} catch (ex) {
 		/* Nothing... */

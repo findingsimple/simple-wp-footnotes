@@ -59,6 +59,14 @@ class Simple_WP_Footnotes_Admin {
 		);
 		
 		add_settings_field(
+			'simple_wp_footnotes-format',
+			'Format:',
+			__CLASS__ . '::simple_wp_footnotes_format_callback',
+			$page,
+			'simple_wp_footnotes-general'
+		);
+		
+		add_settings_field(
 			'simple_wp_footnotes-toggle-show',
 			'Show footnotes on load',
 			__CLASS__ . '::simple_wp_footnotes_toggle_show_callback',
@@ -94,6 +102,7 @@ class Simple_WP_Footnotes_Admin {
 		//register our settings
 		
 		register_setting( $page, 'simple_wp_footnotes-placement' );
+		register_setting( $page, 'simple_wp_footnotes-format' );
 		register_setting( $page, 'simple_wp_footnotes-toggle-show' );
 
 		register_setting( $page, 'simple_wp_footnotes-toggle-css-include' );
@@ -155,6 +164,24 @@ class Simple_WP_Footnotes_Admin {
 		
 	}
 	
+	public static function simple_wp_footnotes_format_callback() {
+		
+		$selected = ( get_option('simple_wp_footnotes-format') ) ? esc_attr( get_option('simple_wp_footnotes-format') ) : 'content';
+		
+		echo '<select name="simple_wp_footnotes-format">';
+		
+		foreach ( Simple_WP_Footnotes_Admin::$formats as $format )  :
+		
+			echo '<option value="' . $format . '"';
+			 if ( $format == $selected ) echo ' selected="selected"';
+			echo ' >' . $format . '</option>';
+		
+		endforeach;
+		
+		echo '</select>';
+		
+	}
+	
 	public static function simple_wp_footnotes_toggle_show_callback() {
 	
 		echo '<input name="simple_wp_footnotes-toggle-show" id="simple_wp_footnotes-toggle-show" type="checkbox" value="1" class="code" ' . checked( 1, get_option('simple_wp_footnotes-toggle-show'), false ) . ' /> Show footnotes by on page load (by default they are hidden)';
@@ -188,6 +215,15 @@ class Simple_WP_Footnotes_Admin {
 	public static $placements = array( 
 		'content',
 		'page_links'
+  	);
+	
+	/**
+	 *  Options
+	 *
+	 */	
+	public static $formats = array( 
+		'decimal',
+		'asterix'
   	);
 
 }
