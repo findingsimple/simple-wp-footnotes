@@ -230,7 +230,11 @@ class Simple_WP_Footnotes {
 			// get footnote number/reference (the last item in the array)
 			$note = count( self::$footnotes[ $id ] ) - 1;
 			
-			$output = ' <a class="simple-wp-footnote" title="' . esc_attr( wp_strip_all_tags( $content ) ) . '" id="footnote-' . $id . '-' . $note . '-return" href="#footnote-' . $id . '-' . $note . '" data-id="' . $id . '">';
+			if(get_option('simple_wp_footnotes-format') == 'asterisk')
+				$output = '<a class="simple-wp-footnote" title="' . esc_attr( wp_strip_all_tags( $content ) ) . '" id="footnote-' . $id . '-' . $note . '-return" href="#footnote-' . $id . '-' . $note . '" data-id="' . $id . '">';
+			else	
+				$output = ' <a class="simple-wp-footnote" title="' . esc_attr( wp_strip_all_tags( $content ) ) . '" id="footnote-' . $id . '-' . $note . '-return" href="#footnote-' . $id . '-' . $note . '" data-id="' . $id . '">';
+			
 			$output .= '<sup>' . self::simple_wp_footnotes_format_note($note) . '</sup>';
 			$output .= '</a>';
 						
