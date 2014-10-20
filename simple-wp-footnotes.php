@@ -4,7 +4,7 @@ Plugin Name: Simple WP Footnotes
 Plugin URI: http://plugins.findingsimple.com
 Description: Adds footnotes to your WP content.
 Version: 1.0
-Author: Finding Simple (Jason Conroy & Brent Shepherd)
+Author: Finding Simple
 Author URI: http://findingsimple.com
 License: GPL2
 */
@@ -35,7 +35,6 @@ if ( ! class_exists( 'Simple_WP_Footnotes' ) ) :
  * should not be initialized until after the plugins_loaded and after_setup_theme hooks.
  * However, it also needs to run early on the init hook.
  *
- * @author Jason Conroy <jason@findingsimple.com>
  * @package Simple WP Footnotes
  * @since 1.0
  */
